@@ -1,34 +1,3 @@
-// var config = {
-//   type: Phaser.AUTO,
-//   parent: 'phaser-example',
-//   width: 800,
-//   height: 600,
-//   physics: {
-    // default: 'arcade',
-    // arcade: {
-    //   debug: false,
-    //   gravity: { y: 0 }
-    // }
-//   },
-//   scene: {
-    // preload: preload,
-    // create: create,
-    // update: update
-//   } 
-// };
-//  
-// var game = new Phaser.Game(config);
-//  
-// function preload() {}
-//  
-// function create() {}
-//  
-// function update() {}
-// 
-
-
-
-
 var config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
@@ -43,16 +12,16 @@ var config = {
 };
 
 var spacebar;
-var ship;
+var player;
 var bullets;
 
 var game = new Phaser.Game(config);
 
 function preload ()
 {
-  this.load.image('space', 'assets/tests/space/nebula.jpg');
-  this.load.image('bullet', 'assets/sprites/bullets/bullet10.png');
-  this.load.image('ship', 'assets/sprites/shmup-ship2.png');
+  this.load.image('background', 'assets');
+  this.load.image('enemy', 'assets/enemy.png');
+  this.load.image('player', 'assets/player.png');
 }
 
 function create ()
@@ -99,7 +68,7 @@ function create ()
 
   this.add.image(400, 300, 'space');
 
-  ship = this.add.image(100, 300, 'ship').setDepth(1000);
+  player = this.add.image(100, 300, 'player').setDepth(1000);
 
   spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
@@ -120,31 +89,31 @@ function update ()
 
       if (bullet)
       {
-          bullet.fire(ship.x, ship.y);
+          bullet.fire(player.x, player.y);
       }
   }
 
   if (d.isDown)
   {
       x = x+10;
-      ship.setPosition(x,y);
+      player.setPosition(x,y);
   }
 
   if (a.isDown)
   {
       x = x-10;
-      ship.setPosition(x,y);
+      player.setPosition(x,y);
   }
 
   if (w.isDown)
   {
       y = y-10;
-      ship.setPosition(x,y);
+      player.setPosition(x,y);
   }
 
   if (s.isDown)
   {
       y = y+10;
-      ship.setPosition(x,y);
+      player.setPosition(x,y);
   }
 }
