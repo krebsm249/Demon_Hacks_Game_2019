@@ -15,7 +15,7 @@ var config = {
 var spacebar;
 var player;
 var fireballs;
-
+var enemy;
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -76,12 +76,37 @@ function create ()
   player.setScale(2);
 
   
-/*
+
   enemy = this.add.sprite(400, 300, 'enemy');
   enemy.setScale(2.25);
+  /*
   enemy.animations.add('right');
   enemy.animations.play('run', 10, true);
   */
+
+  /*******/
+  graphics = this.add.graphics();
+
+  follower = { t: 0, vec: new Phaser.Math.Vector2() };
+
+  //  Path starts at 400x100
+  path = new Phaser.Curves.Path(600, 25);
+
+  path.ellipseTo(400, 400, 750, 450, false);
+  path.ellipseTo(-250, -250, 500, 400, false);
+ 
+
+  this.tweens.add({
+      targets: follower,
+      t: 1,
+      ease: 'Sine.easeInOut',
+      duration: 10000,
+      yoyo: true,
+      repeat: -1
+  });
+
+
+  /*******/
 
   
 
@@ -132,4 +157,20 @@ function update ()
       y = y+10;
       player.setPosition(x,y);
   }
+
+  /******* */
+  graphics.clear();
+
+  graphics.lineStyle(1, 0xffffff, 1);
+
+  path.draw(graphics); //delete this to get rid of line
+
+  path.getPoint(follower.t, follower.vec);
+
+  graphics.fillStyle(0xff0000, 1);
+  graphics.fillCircle(follower.vec.x, follower.vec.y, 12);
+
+  enemy.setPosition(follower.vec.x, follower.vec.y);
+
+  /******* */
 }
