@@ -19,7 +19,7 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-  this.load.image('background', 'assets');
+  this.load.image('background', 'assets/background.png');
   this.load.image('enemy', 'assets/enemy.png');
   this.load.image('player', 'assets/player.png');
 }
