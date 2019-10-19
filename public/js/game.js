@@ -26,6 +26,7 @@ var tweeners;
 var path;
 var game = new Phaser.Game(config);
 var towerCanBePlaced = false;
+var thisvar;
 
 function preload ()
 {
@@ -38,6 +39,7 @@ function preload ()
 
 function create ()
 {   
+    thisvar=  this;
     //Keyboard definitions
     spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -54,7 +56,7 @@ function create ()
     path = new Phaser.Curves.Path(600, 25);
     path.lineTo(100, 200);
     path.lineTo(700, 200);
-    path.lineTo(200, 600);
+    path.lineTo(200, 800);
 
     var fireball = new Phaser.Class({
 
@@ -90,12 +92,6 @@ function create ()
   
     });
 
-    fireballs = this.add.group({
-        classType: fireball,
-        maxSize: 30,
-        runChildUpdate: true
-    });
-
     var enemy = new Phaser.Class({
 
         Extends: Phaser.GameObjects.Sprite,
@@ -125,7 +121,8 @@ function create ()
             this.setPosition(this.follower.vec.x, this.follower.vec.y);
 
             if (this.y > 600 ) {
-                tweeners.remove(this.follower);
+                this.setActive(false);
+                this.setVisible(false);
             }
         }
     });
@@ -140,6 +137,11 @@ function create ()
             this.setActive(true);
             this.setVisible(true);
             this.gold = 0;
+            this.fireballs = thisvar.add.group({
+                classType: fireball,
+                maxSize: 30,
+                runChildUpdate: true
+            });
         },
 
         getGold: function() {return self.gold},
@@ -148,7 +150,7 @@ function create ()
         update: function() {
             if (Phaser.Input.Keyboard.JustDown(spacebar))
             {
-                var fireball = fireballs.get();
+                var fireball = this.fireballs.get();
           
                 if (fireball)
                 {
@@ -182,13 +184,7 @@ function create ()
   this.add.image(400, 300, 'background');
 
 
-
-  /*******/
-  
-
-
-  /*******/
-
+  //
   enemies = this.add.group({
     classType: enemy,
     maxSize: 100,
