@@ -178,21 +178,7 @@ function create ()
     //Set Background image
   this.add.image(400, 300, 'background');
 
-  // Create characters
-  //player = new Character(this,50,50, 2,'player');
-  //enemy = new Character(this,50,50, 2, 'enemy');
 
-  //Add character to the scene
-  //this.add.existing(player);
-  //this.add.existing(enemy);
-  
-
-  //enemy = this.add.sprite(400, 300, 'enemy');
-  //enemy.setScale(2.25);
-  /*
-  enemy.animations.add('right');
-  enemy.animations.play('run', 10, true);
-  */
 
   /*******/
   
@@ -214,25 +200,12 @@ function create ()
 
   players.get();
 
-  /******* */
+  graphics = this.add.graphics();
+  graphics.lineStyle(1, 0xffffff, 1);
 
-  //this.tweens.add({
-  //    targets: follower,
-  //    t: 1,
-  //    ease: 'Sine.easeInOut',
-  //    duration: 10000,
-  //    yoyo: false,
-  //    repeat: -1
-  //});
-  //enemies.get();
-  //ene = enemies.get();
-  //ene.run();
-  //ene = enemies.get();
-  //ene.run();
-  //ene.setPath(path)
-  //console.log(game == self);
+  path.draw(graphics);
 
-}
+}//end of create
 
 function update ()
 {
@@ -247,22 +220,7 @@ function update ()
         this.add.image(pointer.x, pointer.y, 'tower');
         
       }, this);}
-    //ene = enemies.get();
-  //  /******* */
-  //graphics.clear();
-//
-  //graphics.lineStyle(1, 0xffffff, 1);
-//
-  //path.draw(graphics); //delete this to get rid of line
-//
-  //path.getPoint(follower.t, follower.vec);
-//
-  //graphics.fillStyle(0xff0000, 1);
-  //graphics.fillCircle(follower.vec.x, follower.vec.y, 12);
-//
-  //enemy.setPosition(follower.vec.x, follower.vec.y);
-//
-//
-  //  var enem = enemies.get();
 
-}
+
+
+}//end of update
