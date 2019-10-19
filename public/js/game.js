@@ -38,6 +38,7 @@ function preload ()
 
 function create ()
 {   
+    //Keyboard definitions
     spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -46,10 +47,11 @@ function create ()
     t = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
     b = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B);
 
+    //Tween manager
     tweeners = this.tweens
 
+    //Defines the path for enemies to follow
     path = new Phaser.Curves.Path(600, 25);
-    
     path.lineTo(100, 200);
     path.lineTo(700, 200);
     path.lineTo(200, 600);
