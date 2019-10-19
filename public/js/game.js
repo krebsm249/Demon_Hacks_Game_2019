@@ -13,7 +13,7 @@ var config = {
 
 var spacebar;
 var player;
-var bullets;
+var fireballs;
 
 var game = new Phaser.Game(config);
 
@@ -22,20 +22,21 @@ function preload ()
   this.load.image('background', 'assets/background.png');
   this.load.image('enemy', 'assets/enemy.png');
   this.load.image('player', 'assets/player.png');
+  this.load.image('fireball','assets/fireball.png');
 }
 
 function create ()
 {
 
-  var Bullet = new Phaser.Class({
+  var fireball = new Phaser.Class({
 
       Extends: Phaser.GameObjects.Image,
 
       initialize:
 
-      function Bullet (scene)
+      function fireball (scene)
       {
-          Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
+          Phaser.GameObjects.Image.call(this, scene, 0, 0, 'fireball');
 
           this.speed = Phaser.Math.GetSpeed(600, 1);
       },
@@ -61,8 +62,8 @@ function create ()
 
   });
 
-  bullets = this.add.group({
-      classType: Bullet,
+  fireballs = this.add.group({
+      classType: fireball,
       maxSize: 30,
       runChildUpdate: true
   });
@@ -70,7 +71,7 @@ function create ()
   this.add.image(400, 300, 'background');
 
   player = this.add.sprite(100, 300, 'player');
-  player.setScale(10);
+  player.setScale(2);
 
   spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
@@ -87,11 +88,11 @@ function update ()
 {
   if (Phaser.Input.Keyboard.JustDown(spacebar))
   {
-      var bullet = bullets.get();
+      var fireball = fireballs.get();
 
-      if (bullet)
+      if (fireball)
       {
-          bullet.fire(player.x, player.y);
+          fireball.fire(player.x, player.y);
       }
   }
 
