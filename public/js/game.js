@@ -25,6 +25,7 @@ var path;
 var tweeners;
 var path;
 var game = new Phaser.Game(config);
+var towerCanBePlaced = false;
 
 function preload ()
 {
@@ -215,11 +216,15 @@ function update ()
     }
 
     if (Phaser.Input.Keyboard.JustDown(t)){
-    
-        this.input.on('pointerdown', function (pointer) {
-        this.add.image(pointer.x, pointer.y, 'tower');
+        towerCanBePlaced = towerCanBePlaced ? false : true;
         
-      }, this);}
+    }
+    this.input.on('pointerdown', function (pointer) {
+        if (towerCanBePlaced){
+            this.add.image(pointer.x, pointer.y, 'tower');
+            towerCanBePlaced = false;
+        }
+    }, this);
 
 
 
