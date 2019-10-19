@@ -24,6 +24,7 @@ function preload ()
   this.load.image('enemy', 'assets/enemy.png');
   this.load.image('player', 'assets/player.png');
   this.load.image('fireball','assets/fireball.png');
+  this.load.image('tower','assets/tower.png');
 }
 
 function create ()
@@ -101,7 +102,7 @@ function create ()
       targets: follower,
       t: 1,
       ease: 'Sine.easeInOut',
-      duration: 10000,
+      duration: 15000,
       yoyo: true,
       repeat: -1
   });
@@ -118,6 +119,7 @@ function create ()
   a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
   w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
   s = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+  t = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
 
 }
 
@@ -159,6 +161,13 @@ function update ()
       player.setPosition(x,y);
   }
 
+  if (Phaser.Input.Keyboard.JustDown(t)){
+    
+    this.input.on('pointerdown', function (pointer) {
+    this.add.image(pointer.x, pointer.y, 'tower');
+    
+  }, this);}
+
   /******* */
   graphics.clear();
 
@@ -168,8 +177,8 @@ function update ()
 
   path.getPoint(follower.t, follower.vec);
 
-  graphics.fillStyle(0xff0000, 1);
-  graphics.fillCircle(follower.vec.x, follower.vec.y, 12);
+  //graphics.fillStyle(0xff0000, 1);
+  //graphics.fillCircle(follower.vec.x, follower.vec.y, 12);
 
   enemy.setPosition(follower.vec.x, follower.vec.y);
 
