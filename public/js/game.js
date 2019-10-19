@@ -92,8 +92,9 @@ function create ()
   //  Path starts at 400x100
   path = new Phaser.Curves.Path(600, 25);
 
-  path.ellipseTo(400, 400, 750, 450, false);
-  path.ellipseTo(-250, -250, 500, 400, false);
+  path.lineTo(100, 200);
+  path.lineTo(700, 200);
+  path.lineTo(200, 600);
  
 
   this.tweens.add({
