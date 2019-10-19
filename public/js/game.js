@@ -1,3 +1,4 @@
+
 var config = {
   type: Phaser.AUTO,
   parent: 'phaser-example',
@@ -28,6 +29,7 @@ function preload ()
 function create ()
 {
 
+    
   var fireball = new Phaser.Class({
 
       Extends: Phaser.GameObjects.Image,
@@ -72,6 +74,17 @@ function create ()
 
   player = this.add.sprite(100, 300, 'player');
   player.setScale(2);
+
+  
+/*
+  enemy = this.add.sprite(400, 300, 'enemy');
+  enemy.setScale(2.25);
+  enemy.animations.add('right');
+  enemy.animations.play('run', 10, true);
+  */
+
+  
+
 
   spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
