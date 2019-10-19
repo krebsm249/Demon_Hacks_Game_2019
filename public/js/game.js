@@ -66,9 +66,10 @@ function create ()
       runChildUpdate: true
   });
 
-  this.add.image(400, 300, 'space');
+  this.add.image(400, 300, 'background');
 
-  player = this.add.image(100, 300, 'player').setDepth(1000);
+  player = game.add.sprite(100, 300, 'player');
+  player.scale.setTo(2,2)
 
   spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
