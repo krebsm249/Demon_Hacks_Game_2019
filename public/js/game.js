@@ -23,6 +23,7 @@ var d;
 var s;
 var path;
 var tweeners;
+var path;
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -31,6 +32,7 @@ function preload ()
   this.load.image('enemy', 'assets/enemy.png');
   this.load.image('player', 'assets/player.png');
   this.load.image('fireball','assets/fireball.png');
+  this.load.image('tower','assets/tower.png');
 }
 
 function create ()
@@ -40,7 +42,16 @@ function create ()
     w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     s = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    t = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
+    b = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B);
+
     tweeners = this.tweens
+
+    path = new Phaser.Curves.Path(600, 25);
+    
+    path.lineTo(100, 200);
+    path.lineTo(700, 200);
+    path.lineTo(200, 600);
 
     var fireball = new Phaser.Class({
 
@@ -189,9 +200,6 @@ function create ()
 
   /*******/
 
-  
-
-
   enemies = this.add.group({
     classType: enemy,
     maxSize: 100,
@@ -206,16 +214,7 @@ function create ()
 
   players.get();
 
-
-  //CREATES PATH
-  graphics = this.add.graphics();
-
-  //  Path starts at 400x100
-  path = new Phaser.Curves.Path(600, 25);
-
-  path.ellipseTo(400, 400, 750, 450, false);
-  path.ellipseTo(-250, -250, 500, 400, false);
- 
+  /******* */
 
   //this.tweens.add({
   //    targets: follower,
@@ -237,10 +236,17 @@ function create ()
 
 function update ()
 {
-    if (d.isDown) {
+    if (b.isDown) {
         ene = enemies.get();
-  ene.run();
+        ene.run();
     }
+
+    if (Phaser.Input.Keyboard.JustDown(t)){
+    
+        this.input.on('pointerdown', function (pointer) {
+        this.add.image(pointer.x, pointer.y, 'tower');
+        
+      }, this);}
     //ene = enemies.get();
   //  /******* */
   //graphics.clear();
