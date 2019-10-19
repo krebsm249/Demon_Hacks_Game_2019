@@ -1,3 +1,19 @@
+// class Character extends Phaser.GameObjects.Sprite {
+
+//     constructor (scene, x, y, scale, sprite_name) {
+//         super (scene, x, y);
+
+//         this.setPosition(x,y);
+//         this.setTexture(sprite_name);
+//         this.setScale(scale,scale);
+//     }
+
+//     setSpeed (speed) { this.speed = speed; }
+//     getSpeed () {return this.speed;}
+
+//     update () {
+//     }
+// };
 
 var config = {
   type: Phaser.AUTO,
@@ -15,7 +31,13 @@ var config = {
 var spacebar;
 var player;
 var fireballs;
+var enemy;
 
+var spacebar;
+var a;
+var w;
+var d;
+var s;
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -27,109 +49,141 @@ function preload ()
 }
 
 function create ()
-{
+{   
+    spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    s = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
 
+    var fireball = new Phaser.Class({
+
+        Extends: Phaser.GameObjects.Image,
+  
+        initialize:
+  
+        function fireball (scene)
+        {
+            Phaser.GameObjects.Image.call(this, scene, 0, 0, 'fireball');
+  
+            this.speed = Phaser.Math.GetSpeed(600, 1);
+        },
+  
+        fire: function (x, y)
+        {
+            this.setPosition(x, y);
+      
+            this.setActive(true);
+            this.setVisible(true);
+        },
+  
+        update: function (time, delta)
+        {
+            this.x += this.speed * delta;
+  
+            if (this.x > 820)
+            {
+                this.setActive(false);
+                this.setVisible(false);
+            }
+        }
+  
+    });
+
+    fireballs = this.add.group({
+        classType: fireball,
+        maxSize: 30,
+        runChildUpdate: true
+    });
+
+    var enemy = new Phaser.Class( {
+        Extends: Phaser.GameObjects.Sprite,
     
-  var fireball = new Phaser.Class({
+        initialize: function (scene) {
+            Phaser.GameObjects.Sprite.call(this,scene, 50,50, 'enemy');
+            this.setScale(2,2);
+            this.setActive(true);
+            this.setVisible(true);
+        },
 
-      Extends: Phaser.GameObjects.Image,
+        setPath: function(path) { this.path = path; },
 
-      initialize:
+        update: function () {
+            this.setPosition(this.x+1, this.y);
+        }
+    });
 
-      function fireball (scene)
-      {
-          Phaser.GameObjects.Image.call(this, scene, 0, 0, 'fireball');
+    var player = new Phaser.Class({
+        Extends: Phaser.GameObjects.Sprite,
 
-          this.speed = Phaser.Math.GetSpeed(600, 1);
-      },
+        initialize: function(scene) {
+            Phaser.GameObjects.Sprite.call(this,scene,100,100,'player');
+            this.setScale(2,2);
+            this.setActive(true);
+            this.setVisible(true);
+        },
 
-      fire: function (x, y)
-      {
-          this.setPosition(x, y);
+        update: function() {
+            if (Phaser.Input.Keyboard.JustDown(spacebar))
+            {
+                var fireball = fireballs.get();
+          
+                if (fireball)
+                {
+                    fireball.fire(this.x, this.y);
+                }
+            }
+          
+            if (d.isDown)
+            {
+                this.setPosition(this.x+10,this.y);
+            }
+          
+            if (a.isDown)
+            {
+                this.setPosition(this.x-10,this.y);
+            }
+          
+            if (w.isDown)
+            {
+                this.setPosition(this.x,this.y-10);
+            }
+          
+            if (s.isDown)
+            {
+                this.setPosition(this.x,this.y+10);
+            }
+        }
+    });
 
-          this.setActive(true);
-          this.setVisible(true);
-      },
-
-      update: function (time, delta)
-      {
-          this.x += this.speed * delta;
-
-          if (this.x > 820)
-          {
-              this.setActive(false);
-              this.setVisible(false);
-          }
-      }
-
-  });
-
-  fireballs = this.add.group({
-      classType: fireball,
-      maxSize: 30,
-      runChildUpdate: true
-  });
-
+    //Set Background image
   this.add.image(400, 300, 'background');
 
-  player = this.add.sprite(100, 300, 'player');
-  player.setScale(2);
+  // Create characters
+  //player = new Character(this,50,50, 2,'player');
+  //enemy = new Character(this,50,50, 2, 'enemy');
 
-  
-/*
-  enemy = this.add.sprite(400, 300, 'enemy');
-  enemy.setScale(2.25);
-  enemy.animations.add('right');
-  enemy.animations.play('run', 10, true);
-  */
-
-  
+  //Add character to the scene
+  //this.add.existing(player);
+  //this.add.existing(enemy);
 
 
-  spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  enemies = this.add.group({
+    classType: enemy,
+    maxSize: 5,
+    runChildUpdate: true
+  })
 
-  d = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-  a = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-  w = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-  s = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+  players = this.add.group({
+      classType: player,
+      maxSize: 1,
+      runChildUpdate: true
+  })
 
+  players.get();
 }
 
-x = 50
-y = 50
 function update ()
 {
-  if (Phaser.Input.Keyboard.JustDown(spacebar))
-  {
-      var fireball = fireballs.get();
-
-      if (fireball)
-      {
-          fireball.fire(player.x, player.y);
-      }
-  }
-
-  if (d.isDown)
-  {
-      x = x+10;
-      player.setPosition(x,y);
-  }
-
-  if (a.isDown)
-  {
-      x = x-10;
-      player.setPosition(x,y);
-  }
-
-  if (w.isDown)
-  {
-      y = y-10;
-      player.setPosition(x,y);
-  }
-
-  if (s.isDown)
-  {
-      y = y+10;
-      player.setPosition(x,y);
-  }
+    var enem = enemies.get();
 }
