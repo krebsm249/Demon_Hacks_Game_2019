@@ -68,8 +68,8 @@ function create ()
 
   this.add.image(400, 300, 'background');
 
-  player = game.add.sprite(100, 300, 'player');
-  player.scale.setTo(2,2)
+  player = this.add.sprite(100, 300, 'player');
+  player.scale.setTo(10,10);
 
   spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
