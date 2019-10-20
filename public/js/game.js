@@ -166,7 +166,7 @@ function create ()
             this.gold = 5;
         },
 
-        setHp: function(hp) { this.hp = 100;},
+        setHp: function(hp) { this.hp = hp;},
         dealDmg: function(dmg) { this.hp -= dmg; },
 
         run: function() {
@@ -247,12 +247,12 @@ function create ()
                 }
             }
             thisvar.input.on('pointerdown', function (pointer) {
-                player.gold -= 10;
                 if (towerCanBePlaced && !this.towerIsPlaced){
                     var dx = this.x - player.x;
                     var dy = this.y - player.y;
                     withinDistanceOfPlayer = Math.sqrt(dx*dx+dy*dy);
-                    if (withinDistanceOfPlayer < 100) {
+                    if (withinDistanceOfPlayer < 100 && player.gold >= 10) {
+                        player.gold -= 10;
                         this.setPosition(pointer.x,pointer.y);
                         towerCanBePlaced = false;
                         this.towerIsPlaced = true;
@@ -375,10 +375,17 @@ function create ()
 
   path.draw(graphics);
 
+  setInterval(spawn, 5000);
+  function spawn(){
+  for (i = 0; i < 5; i++){
   ene= enemies.get();
+  ene.setHp(150);
   ene.run();
   enemyArray.push(ene);
-
+  console.log(enemyArray);
+  }
+}
+spawn();
 }//end of create
 
 function update ()
