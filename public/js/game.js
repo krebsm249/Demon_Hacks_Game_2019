@@ -104,7 +104,7 @@ function create ()
         {
             Phaser.GameObjects.Sprite.call(this, scene, 0, 0, 'fireball');
   
-            this.speed = 2
+            this.speed = 4
             this.dmg = 50;
         },
   
@@ -129,11 +129,18 @@ function create ()
   
         update: function ()
         {
+            this.angle = Phaser.Math.Angle.Between(this.x,this.y,this.target.x,this.target.y);
+            
+            this.dx = Math.cos(this.angle);
+            this.dy = Math.sin(this.angle);
+
+            this.angle = (this.angle) * Phaser.Math.RAD_TO_DEG;
+
             this.x += this.dx * (this.speed);
             this.y += this.dy * (this.speed);
 
-            var dx = this.x - this.target_x;
-            var dy = this.y - this.target_y;
+            var dx = this.x - this.target.x;
+            var dy = this.y - this.target.y;
             distanceToTarget = Math.sqrt(dx*dx+dy*dy);
 
             if (distanceToTarget <= 10) {
@@ -211,6 +218,7 @@ function create ()
             this.fireCounter = 0;
             this.range = 200;
             this.attack_speed = 60;
+            this.canFire = true;
 
             this.projectiles = thisvar.add.group({
                 classType: projectile,
