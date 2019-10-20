@@ -27,6 +27,7 @@ var path;
 var game = new Phaser.Game(config);
 var towerCanBePlaced = false;
 var thisvar;
+var enemyArray = [];
 
 function preload ()
 {
@@ -109,7 +110,7 @@ function create ()
                 targets: this.follower,
                 t: 1,
                 ease: 'Sine.easeInOut',
-                duration: 10000,
+                duration: 20000,
                 yoyo: false,
                 repeat: -1
             });
@@ -138,6 +139,7 @@ function create ()
             this.setVisible(true);
             this.damage = 0;
             this.cost = 0;
+            this.towerIsPlaced = false;
         },
 
         setDamage: function(newDamage) {self.damage = newDamage;},
@@ -148,8 +150,16 @@ function create ()
                 if (towerCanBePlaced){
                     thisvar.add.image(pointer.x, pointer.y, 'tower');
                     towerCanBePlaced = false;
+                    this.towerIsPlaced = true;
                 }
             }, this);
+
+            if (this.towerIsPlaced) {
+                enemyArray.forEach(function (enem) {
+                    distance = Phaser.Math.Distance.Between(this.x, this.y, enem.x, enemy.y);
+                    console.log(distance);
+                });
+            }
         }
 
     });
@@ -244,14 +254,15 @@ function update ()
     if (b.isDown) {
         ene = enemies.get();
         ene.run();
+        enemyArray.push(ene);
     }
 
     if (Phaser.Input.Keyboard.JustDown(t)){
         towerCanBePlaced = towerCanBePlaced ? false : true;
         tow = towers.get();
-        
-        
     }
+
+
   
 
 
