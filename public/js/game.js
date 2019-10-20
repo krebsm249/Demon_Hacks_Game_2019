@@ -29,6 +29,9 @@ var towerCanBePlaced = false;
 var thisvar;
 var enemyArray = [];
 var towerArray = [];
+var intv;
+var count = 5;
+var spawnCount = 5;
 
 function preload ()
 {
@@ -38,6 +41,18 @@ function preload ()
   this.load.image('fireball','assets/fireball.png');
   this.load.image('tower','assets/tower.png');
 }
+
+function spawn(){
+    ene= enemies.get();
+    ene.setHp(150);
+    ene.run();
+    enemyArray.push(ene);
+    count -= 1;
+  
+    if (count == 0) {
+        clearInterval(intv);
+    }
+      }
 
 function create ()
 {   
@@ -198,6 +213,7 @@ function create ()
                 var index = enemyArray.indexOf(this);
                 if (index > -1) {
                     enemyArray.splice(index,1);
+                    delete this;
                 }
             }
         }
@@ -374,29 +390,23 @@ function create ()
   graphics.lineStyle(1, 0xffffff, 1);
 
   path.draw(graphics);
-  var count = 0;
-  var intv = setInterval(spawn, 2000);
-  function spawn(){
-  ene= enemies.get();
-  ene.setHp(150);
-  ene.run();
-  enemyArray.push(ene);
-  console.log(enemyArray);
-  count += 1;
-
-  if (count == 5) {
-      clearInterval(intv);
-  }
-    }
+  intv = setInterval(spawn, 1500);
     spawn();
 }//end of create
 
 function update ()
 {
-    if (b.isDown) {
-        ene = enemies.get();
-        ene.run();
-        enemyArray.push(ene);
+    //if (b.isDown) {
+    //    ene = enemies.get();
+    //    ene.run();
+    //    enemyArray.push(ene);
+    //}
+
+    if (enemyArray.length == 0) {
+        //console.log("next");
+        intv = setInterval(spawn,1500);
+        spawnCount += 5;
+        count = spawnCount;
     }
 
     if (Phaser.Input.Keyboard.JustDown(t)){
