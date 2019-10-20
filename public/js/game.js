@@ -29,6 +29,14 @@ var towerCanBePlaced = false;
 var thisvar;
 var enemyArray = [];
 
+function distance_between(x1, y1, x2, y2)
+{
+    var dx = x1 - x2;
+    var dy = y1 - y2;
+
+    return Math.sqrt(dx * dx + dy * dy);
+};
+
 function preload ()
 {
   this.load.image('background', 'assets/background.png');
@@ -156,7 +164,7 @@ function create ()
 
             if (this.towerIsPlaced) {
                 enemyArray.forEach(function (enem) {
-                    distance = Phaser.Math.Distance.Between(this.x, this.y, enem.x, enemy.y);
+                    distance = distance_between(this.x, this.y, enem.x, enemy.y);
                     console.log(distance);
                 });
             }
