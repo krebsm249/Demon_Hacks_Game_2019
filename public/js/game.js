@@ -127,6 +127,22 @@ function create ()
         }
     });
 
+    var tower = new Phaser.Class({
+
+        Extends: Phaser.GameObjects.Sprite,
+
+        initialize: function(scene) {
+            Phaser.GameObjects.Sprite.call(this,scene,100,100,'tower');
+            this.setScale(2,2);
+            this.setActive(true);
+            this.setVisible(true);
+            this.damage = 0;
+        },
+
+        setDamage: function(newDamage) {self.damage = newDamage;}
+
+    });
+
     var player = new Phaser.Class({
 
         Extends: Phaser.GameObjects.Sprite,
