@@ -374,18 +374,21 @@ function create ()
   graphics.lineStyle(1, 0xffffff, 1);
 
   path.draw(graphics);
-
-  setInterval(spawn, 5000);
+  var count = 0;
+  var intv = setInterval(spawn, 2000);
   function spawn(){
-  for (i = 0; i < 5; i++){
   ene= enemies.get();
   ene.setHp(150);
   ene.run();
   enemyArray.push(ene);
   console.log(enemyArray);
+  count += 1;
+
+  if (count == 5) {
+      clearInterval(intv);
   }
-}
-spawn();
+    }
+    spawn();
 }//end of create
 
 function update ()
