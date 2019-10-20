@@ -132,14 +132,25 @@ function create ()
         Extends: Phaser.GameObjects.Sprite,
 
         initialize: function(scene) {
-            Phaser.GameObjects.Sprite.call(this,scene,100,100,'tower');
+            Phaser.GameObjects.Sprite.call(this,scene,'tower');
             this.setScale(2,2);
             this.setActive(true);
             this.setVisible(true);
             this.damage = 0;
+            this.cost = 0;
         },
 
-        setDamage: function(newDamage) {self.damage = newDamage;}
+        setDamage: function(newDamage) {self.damage = newDamage;},
+        setCost: function(newCost) {self.cost = newCost;},
+
+        update: function(){
+            thisvar.input.on('pointerdown', function (pointer) {
+                if (towerCanBePlaced){
+                    thisvar.add.image(pointer.x, pointer.y, 'tower');
+                    towerCanBePlaced = false;
+                }
+            }, this);
+        }
 
     });
 
@@ -213,6 +224,12 @@ function create ()
       runChildUpdate: true
   })
 
+  towers = this.add.group({
+    classType: tower,
+    maxSize: 100,
+    runChildUpdate: true
+  })
+
   players.get();
 
   graphics = this.add.graphics();
@@ -231,14 +248,11 @@ function update ()
 
     if (Phaser.Input.Keyboard.JustDown(t)){
         towerCanBePlaced = towerCanBePlaced ? false : true;
+        tow = towers.get();
+        
         
     }
-    this.input.on('pointerdown', function (pointer) {
-        if (towerCanBePlaced){
-            this.add.image(pointer.x, pointer.y, 'tower');
-            towerCanBePlaced = false;
-        }
-    }, this);
+  
 
 
 
