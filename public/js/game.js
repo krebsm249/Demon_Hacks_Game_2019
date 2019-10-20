@@ -156,6 +156,7 @@ function create ()
             this.setActive(true);
             this.setVisible(true);
             this.hp = 100;
+            this.gold = 5;
         },
 
         setHp: function(hp) { this.hp = 100;},
@@ -186,6 +187,7 @@ function create ()
             if (this.hp<=0) {
                 this.setActive(false);
                 this.setVisible(false);
+                player.gold += this.gold;
                 var index = enemyArray.indexOf(this);
                 if (index > -1) {
                     enemyArray.splice(index,1);
@@ -251,6 +253,7 @@ function create ()
 
 
             if (this.towerIsPlaced) {
+                player.gold -= 10;
                 towerPos_X = this.x;
                 towerPos_Y = this.y;
                 thisProjectiles = this.projectiles;
@@ -289,7 +292,7 @@ function create ()
             this.setScale(2,2);
             this.setActive(true);
             this.setVisible(true);
-            this.gold = 0;
+            this.gold = 10;
             this.fireballs = thisvar.add.group({
                 classType: fireball,
                 maxSize: 30,
@@ -381,4 +384,5 @@ function update ()
         towerCanBePlaced = towerCanBePlaced ? false : true;
         towers.get();
     }
+    
 }//end of update
