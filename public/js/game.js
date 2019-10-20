@@ -247,6 +247,7 @@ function create ()
                 }
             }
             thisvar.input.on('pointerdown', function (pointer) {
+                player.gold -= 10;
                 if (towerCanBePlaced && !this.towerIsPlaced){
                     var dx = this.x - player.x;
                     var dy = this.y - player.y;
@@ -261,7 +262,6 @@ function create ()
 
 
             if (this.towerIsPlaced) {
-                player.gold -= 10;
                 towerPos_X = this.x;
                 towerPos_Y = this.y;
                 thisProjectiles = this.projectiles;
@@ -312,6 +312,7 @@ function create ()
         setGold: function(newGold) {self.gold = newGold;},
 
         update: function() {
+            console.log("Gold: " + this.gold);
             if (Phaser.Input.Keyboard.JustDown(spacebar))
             {
                 var fireball = this.fireballs.get();
