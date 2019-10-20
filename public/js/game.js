@@ -28,6 +28,7 @@ var game = new Phaser.Game(config);
 var towerCanBePlaced = false;
 var thisvar;
 var enemyArray = [];
+var towerArray = [];
 
 function distance_between(x1, y1, x2, y2)
 {
@@ -137,11 +138,10 @@ function create ()
     });
 
     var tower = new Phaser.Class({
-
         Extends: Phaser.GameObjects.Sprite,
 
         initialize: function(scene) {
-            Phaser.GameObjects.Sprite.call(this,scene,'tower');
+            Phaser.GameObjects.Sprite.call(this,scene,-100,-100,'tower');
             this.setScale(2,2);
             this.setActive(true);
             this.setVisible(true);
@@ -155,8 +155,8 @@ function create ()
 
         update: function(){
             thisvar.input.on('pointerdown', function (pointer) {
-                if (towerCanBePlaced){
-                    thisvar.add.image(pointer.x, pointer.y, 'tower');
+                if (towerCanBePlaced && !this.towerIsPlaced){
+                    this.setPosition(pointer.x,pointer.y);
                     towerCanBePlaced = false;
                     this.towerIsPlaced = true;
                 }
@@ -165,7 +165,10 @@ function create ()
             if (this.towerIsPlaced) {
                 enemyArray.forEach(function (enem) {
                     distance = distance_between(this.x, this.y, enem.x, enemy.y);
-                    console.log(distance);
+                    console.log(this.x);
+                    if (distance<=100){
+                        console.log("WITHIN 100 PIXELS");
+                    }
                 });
             }
         }
@@ -267,12 +270,6 @@ function update ()
 
     if (Phaser.Input.Keyboard.JustDown(t)){
         towerCanBePlaced = towerCanBePlaced ? false : true;
-        tow = towers.get();
+        towers.get();
     }
-
-
-  
-
-
-
 }//end of update
