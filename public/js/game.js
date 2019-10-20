@@ -30,14 +30,6 @@ var thisvar;
 var enemyArray = [];
 var towerArray = [];
 
-function distance_between(x1, y1, x2, y2)
-{
-    var dx = x1 - x2;
-    var dy = y1 - y2;
-
-    return Math.sqrt(dx * dx + dy * dy);
-};
-
 function preload ()
 {
   this.load.image('background', 'assets/background.png');
@@ -102,6 +94,58 @@ function create ()
   
     });
 
+    var projectile = new Phaser.Class({
+
+        Extends: Phaser.GameObjects.Image,
+  
+        initialize:
+  
+        function projectile (scene)
+        {
+            Phaser.GameObjects.Sprite.call(this, scene, 0, 0, 'fireball');
+  
+            this.speed = 2
+            this.dmg = 50;
+        },
+  
+        fire: function (x, y, x2, y2, target)
+        {
+            this.target_x = x2;
+            this.target_y = y2;
+            this.target = target;
+
+            this.angle = Phaser.Math.Angle.Between(x,y,x2,y2);
+            
+            this.dx = Math.cos(this.angle);
+            this.dy = Math.sin(this.angle);
+
+            this.angle = (this.angle) * Phaser.Math.RAD_TO_DEG;
+
+            this.setPosition(x, y);
+      
+            this.setActive(true);
+            this.setVisible(true);
+        },
+  
+        update: function ()
+        {
+            this.x += this.dx * (this.speed);
+            this.y += this.dy * (this.speed);
+
+            var dx = this.x - this.target_x;
+            var dy = this.y - this.target_y;
+            distanceToTarget = Math.sqrt(dx*dx+dy*dy);
+
+            if (distanceToTarget <= 10) {
+                this.setActive(false);
+                this.setVisible(false);
+                this.target.dealDmg(this.dmg);
+            }
+                    
+        }
+  
+    });
+
     var enemy = new Phaser.Class({
 
         Extends: Phaser.GameObjects.Sprite,
@@ -111,7 +155,11 @@ function create ()
             this.setScale(2,2);
             this.setActive(true);
             this.setVisible(true);
+            this.hp = 100;
         },
+
+        setHp: function(hp) { this.hp = 100;},
+        dealDmg: function(dmg) { this.hp -= dmg; },
 
         run: function() {
             this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
@@ -134,6 +182,15 @@ function create ()
                 this.setActive(false);
                 this.setVisible(false);
             }
+
+            if (this.hp<=0) {
+                this.setActive(false);
+                this.setVisible(false);
+                var index = enemyArray.indexOf(this);
+                if (index > -1) {
+                    enemyArray.splice(index,1);
+                }
+            }
         }
     });
 
@@ -148,28 +205,76 @@ function create ()
             this.damage = 0;
             this.cost = 0;
             this.towerIsPlaced = false;
+            this.id = Math.floor(Math.random()*10000);
+            this.fireCounter = 0;
+            this.range = 200;
+            this.attack_speed = 60;
+
+            this.projectiles = thisvar.add.group({
+                classType: projectile,
+                maxSize: 100,
+                runChildUpdate: true
+              });
         },
 
         setDamage: function(newDamage) {self.damage = newDamage;},
         setCost: function(newCost) {self.cost = newCost;},
 
         update: function(){
+            if (towerCanBePlaced && !this.towerIsPlaced) {
+                thisvar.input.on('pointermove', function(pointer){
+                    if (towerCanBePlaced && !this.towerIsPlaced) {
+                        this.setPosition(pointer.x,pointer.y);
+                    }
+                }, this);
+                var dx = this.x - player.x;
+                var dy = this.y - player.y;
+                withinDistanceOfPlayer = Math.sqrt(dx*dx+dy*dy);
+                if (withinDistanceOfPlayer >= 100){
+                    this.tint = .9 * 0xffffff;
+                } else {
+                    this.tint = 0xffffff;
+                }
+            }
             thisvar.input.on('pointerdown', function (pointer) {
                 if (towerCanBePlaced && !this.towerIsPlaced){
-                    this.setPosition(pointer.x,pointer.y);
-                    towerCanBePlaced = false;
-                    this.towerIsPlaced = true;
+                    var dx = this.x - player.x;
+                    var dy = this.y - player.y;
+                    withinDistanceOfPlayer = Math.sqrt(dx*dx+dy*dy);
+                    if (withinDistanceOfPlayer < 100) {
+                        this.setPosition(pointer.x,pointer.y);
+                        towerCanBePlaced = false;
+                        this.towerIsPlaced = true;
+                    }
                 }
             }, this);
 
+
             if (this.towerIsPlaced) {
+                towerPos_X = this.x;
+                towerPos_Y = this.y;
+                thisProjectiles = this.projectiles;
+                thisFireCounter = this.fireCounter;
+                thisAttckSpeed = this.attack_speed;
+                thisRange = this.range;
+
                 enemyArray.forEach(function (enem) {
-                    distance = distance_between(this.x, this.y, enem.x, enemy.y);
-                    console.log(this.x);
-                    if (distance<=100){
-                        console.log("WITHIN 100 PIXELS");
+                    var dx = towerPos_X - enem.x;
+                    var dy = towerPos_Y - enem.y;
+                    distance = Math.sqrt(dx*dx+dy*dy);
+                    if (distance<=thisRange){
+                        if (thisFireCounter==0) {
+                            proj = thisProjectiles.get();
+                            if (proj) {
+                                proj.fire(towerPos_X, towerPos_Y, enem.x, enem.y, enem);
+                            }
+                        }
                     }
                 });
+                this.fireCounter++;
+                if (this.fireCounter >= thisAttckSpeed) {
+                    this.fireCounter = 0;
+                }
             }
         }
 
@@ -251,12 +356,16 @@ function create ()
     runChildUpdate: true
   })
 
-  players.get();
+  player = players.get();
 
   graphics = this.add.graphics();
   graphics.lineStyle(1, 0xffffff, 1);
 
   path.draw(graphics);
+
+  ene= enemies.get();
+  ene.run();
+  enemyArray.push(ene);
 
 }//end of create
 
