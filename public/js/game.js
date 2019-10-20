@@ -339,22 +339,22 @@ function create ()
                 }
             }
           
-            if (d.isDown)
+            if (d.isDown && this.x <= 780)
             {
                 this.setPosition(this.x+10,this.y);
             }
           
-            if (a.isDown)
+            if (a.isDown && this.x >= 20)
             {
                 this.setPosition(this.x-10,this.y);
             }
           
-            if (w.isDown)
+            if (w.isDown && this.y >= 20)
             {
                 this.setPosition(this.x,this.y-10);
             }
           
-            if (s.isDown)
+            if (s.isDown && this.y <= 560)
             {
                 this.setPosition(this.x,this.y+10);
             }
